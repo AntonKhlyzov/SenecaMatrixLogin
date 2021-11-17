@@ -1,0 +1,147 @@
+#!/bin/bash
+
+ 
+
+file=./ftmp1.txt
+
+ 
+
+echo "Matrix login: Use stored credentials? (Y/N)" 
+
+ 
+
+read user_promt
+
+ 
+
+if [[ $user_promt == 'y' || $user_promt == 'Y' || $user_promt == 'yes' || $user_promt == 'Yes' || $user_promt == 'YES' ]]
+
+ 
+
+then
+
+ 
+
+if [ ! -e "$file" ]; then
+
+ 
+
+echo "No stored credentials."
+
+ 
+
+else 
+
+ 
+
+uname1=$(cat ftmp1.txt)
+
+paswd1=$(cat ftmp2.txt)
+
+ 
+
+/usr/bin/expect -c "
+
+  spawn ssh $uname1@matrix.senecacollege.ca
+
+  expect \"assword:\"
+
+  send \"$paswd1\r\"
+
+  expect \"$ \"
+
+  interact
+
+"
+
+fi
+
+ 
+
+else 
+
+ 
+
+echo Please Enter Matrix Login Credentials
+
+echo -n Username:
+
+read uname
+
+ 
+
+echo -n Password:
+
+read -s paswd
+
+ 
+
+echo "Would you like to store credentials? (Y/N)"
+
+ 
+
+read user_promt1
+
+ 
+
+if [[ $user_promt1 == 'y' || $user_promt1 == 'Y' || $user_promt1 == 'yes' || $user_promt1 == 'Yes' || $user_promt1 == 'YES' ]]
+
+ 
+
+then
+
+ 
+
+echo $uname > ./ftmp1.txt
+
+echo $paswd > ./ftmp2.txt
+
+ 
+
+chmod 700 ./ftmp1.txt
+
+chmod 700 ./ftmp2.txt
+
+ 
+
+/usr/bin/expect -c "
+
+  spawn ssh $uname@matrix.senecacollege.ca
+
+  expect \"assword:\"
+
+  send \"$paswd\r\"
+
+  expect \"$ \"
+
+  interact
+
+"
+
+else 
+
+ 
+
+rm ./ftmp1.txt
+
+rm ./ftmp2.txt
+
+ 
+
+/usr/bin/expect -c "
+
+  spawn ssh $uname@matrix.senecacollege.ca
+
+  expect \"assword:\"
+
+  send \"$paswd\r\"
+
+  expect \"$ \"
+
+  interact
+
+"
+
+fi
+
+fi
